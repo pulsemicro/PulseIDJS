@@ -148,7 +148,7 @@ and then call the image renderer to create the image:
 	}, personalizations );
 
 
-**-templateBase64(templateFile, callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void, personalizations?: Options.Peronalization[])**
+**-templateBase64(templateFile: string, callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void, personalizations?: Options.Peronalization[])**
 
 You can get back the base64 image source. Example:
 
@@ -187,7 +187,7 @@ You can change the palette. Example:
 			console.log(error);
 	});
 
-**-designChangeNeedles(fileName: string, imageId, needles: number[], callbackSuccess: (url) => void, callbackFail: (errorMessage: string) => void)**
+**-designChangeNeedles(fileName: string, imageId: string, needles: number[], callbackSuccess: (url) => void, callbackFail: (errorMessage: string) => void)**
 
 You can also change the needles. Example:
 
@@ -225,7 +225,7 @@ And change needles, working with base64. Example:
 
 For full control of the design rendering process use the following methods
 
-**-design(fileName: string, imageId, palette: string[], needles: number[], transformationOptions: Options.TransformationOptions, callbackSuccess: (url) => void, callbackFail: (errorMessage: string) => void)**
+**-design(fileName: string, imageId: string, palette: string[], needles: number[], transformationOptions: Options.TransformationOptions, callbackSuccess: (url) => void, callbackFail: (errorMessage: string) => void)**
 
 In this method, you pass as parameters the file name of the desired design, the id of the HTML-DOM image element you want to change, the palette, the needles, the transformation options (please go to section "**TRANSFORMATION OPTIONS**" to see how to create a transformation options object), and the callback function that returns the generated url. Example:
 
