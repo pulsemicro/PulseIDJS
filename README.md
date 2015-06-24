@@ -63,13 +63,13 @@ To do that, there are the following methods:
 	});
 
 
-**-letteringTextFontColorBase64String(text: string, font: string, colors: string[], callbackSuccess: (data: string)=> void, callbackFail: (errorMessage: string) => void)**
+**-letteringTextFontColorBase64(text: string, font: string, colors: string[], callbackSuccess: (data: string)=> void, callbackFail: (errorMessage: string) => void)**
 
  You can get back the base64 string source by pass as parameters only the text, the font and the colors you want. See the example bellow.
 
 	var myColors = ["ff4f88", "000ff0"];
 
-	imageRenderer.letteringTextFontColorBase64String("MyText", "Two Col Athletic", myColors, function(data){
+	imageRenderer.letteringTextFontColorBase64("MyText", "Two Col Athletic", myColors, function(data){
 		 document.getElementById("myImageId").src = "data:image/png;base64," + data;
 	}, function( error ) {
 		 alert( error );
@@ -112,10 +112,10 @@ then use your renderer to create the image:
 		 console.log(errorMessage);
 	});
 
-**-letteringBase64String(options: Options.LetteringOptions, callbackSuccess: (data: string) => void, callbackFail: (errorMessage: string) => void)**
+**-letteringBase64(options: Options.LetteringOptions, callbackSuccess: (data: string) => void, callbackFail: (errorMessage: string) => void)**
  You can get back the base64 string source of generated image. See the example bellow.
 
-	imageRenderer.letteringBase64String(options, function(data){
+	imageRenderer.letteringBase64(options, function(data){
 		document.getElementById("myImageId").src = "data:image/png;base64," + data;
 	}, function(error){
 		alert(error);
@@ -148,7 +148,7 @@ and then call the image renderer to create the image:
 	}, personalizations );
 
 
-**-templateBase64String(templateFile, callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void, personalizations?: Options.Peronalization[])**
+**-templateBase64(templateFile, callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void, personalizations?: Options.Peronalization[])**
 
 You can get back the base64 image source. Example:
 
@@ -162,7 +162,7 @@ You can get back the base64 image source. Example:
 
 and then create the base64 string
 
-	imageRenderer.templateBase64String("FileName.pxf", function(data){
+	imageRenderer.templateBase64("FileName.pxf", function(data){
 		 document.getElementById("myImageId").src = "data:image/png;base64," + data;
 	}, function(errorMessage){
 		alert("An error occured!");
@@ -197,25 +197,25 @@ You can also change the needles. Example:
          console.log(url);
       });
 
-**-designChangePaletteBase64String(fileName: string, palette: string[], callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void)**
+**-designChangePaletteBase64(fileName: string, palette: string[], callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void)**
 
 And change palette, working with base64. Example:
 
 	var colors = ["ff4f88", "000ff0"];
 
-        imageRenderer.designChangePaletteBase64String("B2VLB.PXF", colors, function (base64) {
+        imageRenderer.designChangePaletteBase64("B2VLB.PXF", colors, function (base64) {
             document.getElementById("myImageId").src = "data:image/png;base64," + base64;
         }, function (error) {
             console.log(error);
         });
 
-**-designChangeNeedlesBase64String(fileName: string, needles: number[], callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void)**
+**-designChangeNeedlesBase64(fileName: string, needles: number[], callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void)**
 
 And change needles, working with base64. Example:
 
 	 var needles = [2, 0];
 
-        imageRenderer.designChangeNeedlesBase64String("B2VLB.PXF", needles, function (base64) {
+        imageRenderer.designChangeNeedlesBase64("B2VLB.PXF", needles, function (base64) {
             document.getElementById("myImageId").src = "data:image/png;base64," + base64;
         }, function (error) {
             console.log(error);
@@ -241,7 +241,7 @@ In this method, you pass as parameters the file name of the desired design, the 
 	});
 
 
-**-designBase64String(fileName: string, palette: string[], needles: number[], transformationOptions: Options.TransformationOptions, callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void)**
+**-designBase64(fileName: string, palette: string[], needles: number[], transformationOptions: Options.TransformationOptions, callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void)**
 
 And the same with base64. Example:
 
@@ -253,7 +253,7 @@ And the same with base64. Example:
 	var needles = [0, 3];
 	var palette = ["ff0012", "00ff00"];
 
-	imageRenderer.designBase64String("B2VLB.PXF", palette, needles, transformationOptions, function (base64) {
+	imageRenderer.designBase64("B2VLB.PXF", palette, needles, transformationOptions, function (base64) {
             document.getElementById("image").src = "data:image/png;base64," + base64;
         }, function (err) {
             console.log(err);
