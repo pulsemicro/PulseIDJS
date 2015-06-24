@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="Scripts/Stitchportjs.min.js"></script>
+
+    <title>Designs Example</title>
+</head>
+<body>
+    <img id="designImage" />
+    <img id="desidnBase64Image" />
+
+</body>
+</html>
+
+<script>
+    (function () {
+        //
+        //create the config object by passing as parameter your domain url
+        //
+        var configObject = new StitchEngine.SEConfigObject("YourURL");
+
+        //
+        //create the stich engine factory and then the image renderer
+        //
+        var factory = new StitchEngine.SEFactory(configObject);
+        var imageRenderer = factory.getImageRenderer();
+
+        //
+        // Render a design and change only its color options
+        //
+
+        //palette
+        var palette = ["ff0000", "00ff00", "0000ff"];
+
+        imageRenderer.designChangePalette("yourFile", "designImage", palette, designSuccess, designError);
+
+
+        //
+        // Full options render design, in base64 format
+        //
+
+        //create your palette and needles
+
+        var paletteColors = ["ff0000", "00ff00", "0000ff"];
+        var needles = [2, 1];
+
+        //create transformation options
+
+        var transformationOptions = new Options.TransformationOptions();
+
+        transformationOptions.Angle = 40;
+        transformationOptions.Scale = 70;
+        transformationOptions.OffsetX = 50;
+        transformationOptions.ResetOrigin = false;
+
+        imageRenderer.designBase64("yourFile", paletteColors, needles, transformationOptions, designSuccessBase64, designError);
+
+        function designSuccess(url){
+            console.log(url);
+        }
+
+        function designError(err) {
+            console.log(err);
+        }
+
+        function designSuccessBase64(base64){
+            document.getElementById("desidnBase64Image").src = "data:image/png;base64," + base64;
+        }
+    })();
+</script>
