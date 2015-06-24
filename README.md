@@ -3,30 +3,26 @@
 **StitchportJS**
 ---
 
-StitchportJS is a javascript library that helps using the StitchPortWebAPI. 
+StitchportJS is a javascript library that helps using the Stitchport Web API. 
 
 StitchportJS allows rendering:
 
   - Lettering
   - Designs
-  - Compounds
   - Templates
 
-Rendering is separated to cases:
 
- - StitchportJS can take an image ID as a parameter and fill it with the desired image. It can also get a callback in case that the user wants to manipulate the generated url
- - StitchportJS can return the generated image source in base64 string format
 
-Tech
+Tech Info
 ----
-StitchportJS is based on javascript only and no third parties projects or libraries are required
+StitchportJS is based on javascript only and no third party libraries are required
 
 
 Installation
 --
+Inside the "dist" folder you will find stitchport.min.js file. Please add it to your html page. 
 
-
-	<script src="StitchportJS.js"></script>
+	<script src="StitchportJS.min.js"></script>
 
 
 How to use the StitchportJS
@@ -36,23 +32,23 @@ After including the js file to your project you have to create a new stitch engi
 
 	var configObject = new StitchEngine.SEConfigObject("http://www.stitchportwebapi.com");
 
-Then you have to create a factory object in order to get the image renderer, and pass the configuration object that created in previous step:
+Then create a factory object by passing the configuration object that was created in the previous step. Use this factory class to create an imageRenderer object:
 
 	var factory = new StitchEngine.SEFactory(configObject);
 	var imageRenderer = factory.getImageRenderer();
 
-After creating the imageRenderer you are ready to use the library for rendering images.
+The image-renderer object will help you to render embroidery images...
 
 **LETTERING**
 ----
 
-You can create designs with text. You can get the base64 representation of the image or by giving an id of an Html-DOM Image element the function will set the source property of it to the resulted image. Finally a callback function is provided to  get back the created url. 
+You can create designs with text. You can get the base64 representation of the image or by giving an id of an Html-DOM image element the function will set the source property of it to the resulted url. Finally a callback function is provided to  get back the resulted url in case for further manipulation. 
 
 To do that, there are the following methods:
 
  **-letteringTextFontColor(text: string, font:string, colors:string[], imageId: string, callbackSuccess: ()=> void, callbackFail: (errorMessage: string) => void)**
 
- You can create an image by giving as parameters only the text, the font and the colors you want. See the example bellow.
+ You can create an embroidery lettering image by giving as parameters only the text, the font and the colors you want. See the example bellow. Please note that imageId is not required.
 
 	var myColors = ["ff4f88", "000ff0"];
 
@@ -79,7 +75,7 @@ For full control of the lettering rendering process use the following methods
 
 **-lettering(options: Options.LetteringOptions, imageId:string, callbackSuccess: (url:string)=> void, callbackFail: (errorMessage: string) => void)**
 
-To see how to create lettering options please go to "**LETTERING OPTIONS**" section. The imageId is the id of the image html element, and the callback function is the function that returns the generated url. See the example below. 
+To see how to create lettering options please go to "**LETTERING OPTIONS**" section. The imageId is the id of the html image element, and the callback function is the function that returns the generated url. See the example below. 
 
 First create your options object:
 
