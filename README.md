@@ -39,6 +39,8 @@ Then create a factory object by passing the configuration object that was create
 
 The image-renderer object will help you to render embroidery images...
 
+Please read below the full documentation of the library or visit the examples folder of the repository to see some sample code. 
+
 **LETTERING**
 ----
 
