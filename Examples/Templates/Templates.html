@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="Scripts/Stitchportjs.min.js"></script>
+
+    <title>Templates Example</title>
+</head>
+<body>
+    <img id="tempImage" />
+    <img id="tempBase64Image" />
+</body>
+</html>
+
+<script>
+    (function () {
+        //
+        //create the config object by passing as parameter your domain url
+        //
+        var configObject = new StitchEngine.SEConfigObject("YourUrl");
+
+        //
+        //create the stich engine factory and then the image renderer
+        //
+        var factory = new StitchEngine.SEFactory(configObject);
+        var imageRenderer = factory.getImageRenderer();
+
+        //
+        //create personalization options 
+        //
+
+        //
+        //first create an array of personalizations
+        //
+
+        var personalizations = [];
+
+        var firstPersonalization = new Options.Peronalization();
+
+        firstPersonalization.Name = "ElementsName";
+        firstPersonalization.Text = "Your text";
+        firstPersonalization.TextColour = "your color";
+
+        var secondPersonalization = new Options.Peronalization();
+
+        secondPersonalization.Name = "SecondElementsName";
+        secondPersonalization.Text = "Your second text";
+        secondPersonalization.TextColour = "Your second Color";
+        //You can add as many personalizations as needed
+
+        personalizations.push(firstPersonalization);
+        personalizations.push(secondPersonalization);
+
+        //render...
+        imageRenderer.template("yourFile.pxf", "tempImage", templateSuccess, personalizations);
+
+        //
+        // templates in base64 format
+        //
+
+        //
+        // we will use the personalizations we created above for simplicity reasons
+        //
+
+        imageRenderer.templateBase64("yourFile", templateSuccessBase64, templatesFail, personalizations);
+
+        function templateSuccess(url){
+            console.log(url);
+        }
+
+        function templateSuccessBase64(base64) {
+            document.getElementById("tempBase64Image").src = "data:image/png;base64," + base64;
+        }
+
+        function templatesFail(error) {
+            console.log(error);
+        }
+    })();
+</script>

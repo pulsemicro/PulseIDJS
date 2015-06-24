@@ -1,12 +1,220 @@
-﻿module Renderer {
-    export class ImageRenderer implements Helpers.IRenderer {
-        private confObject: StitchEngine.SEConfigObject;
+﻿var Assets;
+(function (Assets) {
+    var AssetsManager = (function () {
+        function AssetsManager(confObject) {
+            this.configObject = confObject;
+        }
+        AssetsManager.prototype.getFonts = function (callbackSuccess, callbackFail) {
+            var options = new Options.getFontOptions();
+            var url = this.createGetFontUrl(options);
 
-        constructor(confObject: StitchEngine.SEConfigObject) {
+            this.handleRequest(url, callbackSuccess, callbackFail);
+        };
+
+        AssetsManager.prototype.getFontsToJsonFormat = function (options, callbackSuccess, callbackFail) {
+            var url = this.createGetFontUrl(options, "json");
+
+            this.handleRequest(url, callbackSuccess, callbackFail);
+        };
+
+        AssetsManager.prototype.getFontsToXmlFormat = function (options, callbackSuccess, callbackFail) {
+            var url = this.createGetFontUrl(options);
+
+            this.handleRequest(url, callbackSuccess, callbackFail);
+        };
+
+        AssetsManager.prototype.getRecipesToXml = function (callbackSuccess, callbackFail, issorted) {
+            var recipeOptions = new Options.getRecipesOptions();
+            if (issorted)
+                recipeOptions.IsSorted = issorted;
+
+            var url = this.createGetRecipesUrl(recipeOptions);
+            this.handleRequest(url, callbackSuccess, callbackFail);
+        };
+
+        AssetsManager.prototype.getRecipesToJson = function (callbackSuccess, callbackFail, issorted) {
+            var recipeOptions = new Options.getRecipesOptions();
+            recipeOptions.Format = "json";
+            if (issorted)
+                recipeOptions.IsSorted = issorted;
+
+            var url = this.createGetRecipesUrl(recipeOptions);
+            this.handleRequest(url, callbackSuccess, callbackFail);
+        };
+
+        AssetsManager.prototype.createGetFontUrl = function (options, format) {
+            if (typeof format === "undefined") { format = "xml"; }
+            var url = this.configObject.url + "List/Fonts?format=" + format;
+
+            if (options.Type)
+                url += "&type=" + options.Type;
+            if (options.IsSorted)
+                url += "&issorted=" + options.IsSorted;
+
+            return url;
+        };
+
+        AssetsManager.prototype.createGetRecipesUrl = function (options) {
+            var format = (options.Format) ? options.Format : "xml";
+            var url = this.configObject.url + "List/Recipes?format=" + format;
+
+            if (options.IsSorted)
+                url += "&issorted=" + options.IsSorted;
+
+            return url;
+        };
+
+        AssetsManager.prototype.handleRequest = function (url, callbackSuccess, callbackFail) {
+            var request = this.createCORSRequest("GET", url);
+            if (!request)
+                callbackFail("Your browser deos not support ajax calls");
+            else
+                request.send();
+
+            request.onreadystatechange = function () {
+                if (request.readyState == 4 && request.status == 200) {
+                    var resp = request.response;
+
+                    if (callbackSuccess)
+                        callbackSuccess(resp);
+                } else if (request.readyState == 4 && request.status == 404) {
+                    if (callbackFail)
+                        callbackFail("Server not found");
+                } else if (request.readyState == 4 && request.status == 500) {
+                    if (callbackFail)
+                        callbackFail("Internal server error");
+                }
+            };
+        };
+
+        AssetsManager.prototype.createCORSRequest = function (method, url) {
+            var myXhr;
+            var xhr = new XMLHttpRequest();
+            if ("withCredentials" in xhr) {
+                myXhr = xhr;
+                myXhr.open(method, url, true);
+            } else if (typeof XDomainRequest != "undefined") {
+                var xhr2 = new XDomainRequest();
+                myXhr = xhr2;
+                xhr.open(method, url);
+            } else {
+                myXhr = null;
+            }
+            return myXhr;
+        };
+        return AssetsManager;
+    })();
+    Assets.AssetsManager = AssetsManager;
+})(Assets || (Assets = {}));
+var Options;
+(function (Options) {
+    var LetteringOptions = (function () {
+        function LetteringOptions() {
+            this.Text = null;
+            this.Type = null;
+            this.Font = null;
+            this.Height = null;
+            this.WidthCompression = null;
+            this.Justification = null;
+            this.Envelope = null;
+            this.Recipe = null;
+            this.X1 = null;
+            this.X2 = null;
+            this.Y1 = null;
+            this.Y2 = null;
+            this.Decoration = null;
+            this.Neendle = null;
+            this.MachineFormat = null;
+            this.TransformationOptions = null;
+            this.Palette = null;
+        }
+        return LetteringOptions;
+    })();
+    Options.LetteringOptions = LetteringOptions;
+
+    var TransformationOptions = (function () {
+        function TransformationOptions() {
+            this.Angle = null;
+            this.Scale = null;
+            this.OffsetX = null;
+            this.OffsetY = null;
+            this.ResetOrigin = null;
+        }
+        return TransformationOptions;
+    })();
+    Options.TransformationOptions = TransformationOptions;
+
+    var getFontOptions = (function () {
+        function getFontOptions() {
+            this.IsSorted = null;
+            this.Type = null;
+        }
+        return getFontOptions;
+    })();
+    Options.getFontOptions = getFontOptions;
+
+    var getRecipesOptions = (function () {
+        function getRecipesOptions() {
+            this.Format = null;
+            this.IsSorted = null;
+        }
+        return getRecipesOptions;
+    })();
+    Options.getRecipesOptions = getRecipesOptions;
+
+    var Peronalization = (function () {
+        function Peronalization() {
+            this.Design = null;
+            this.Name = null;
+            this.Text = null;
+            this.TextColour = null;
+        }
+        return Peronalization;
+    })();
+    Options.Peronalization = Peronalization;
+
+    var CompoundOptions = (function () {
+        function CompoundOptions() {
+            this.Layout = null;
+            this.MachineFormat = null;
+            this.Needles = null;
+            this.Palette = null;
+            this.Recipe = null;
+            this.StackedAlignment = null;
+            this.StackedSpacing = null;
+            this.TransformationOptions = null;
+            this.CompoundElements = null;
+        }
+        return CompoundOptions;
+    })();
+    Options.CompoundOptions = CompoundOptions;
+
+    var DesignOptions = (function () {
+        function DesignOptions() {
+            this.File = null;
+            this.palette = null;
+            this.needles = null;
+        }
+        return DesignOptions;
+    })();
+    Options.DesignOptions = DesignOptions;
+
+    var CompoundElements = (function () {
+        function CompoundElements() {
+            this.Design = null;
+            this.Letteting = null;
+        }
+        return CompoundElements;
+    })();
+    Options.CompoundElements = CompoundElements;
+})(Options || (Options = {}));
+var Renderer;
+(function (Renderer) {
+    var ImageRenderer = (function () {
+        function ImageRenderer(confObject) {
             this.confObject = confObject;
         }
-
-        lettering(options: Options.LetteringOptions, imageId: string, callbackSuccess: (url: string) => void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.lettering = function (options, imageId, callbackSuccess, callbackFail) {
             var invalidColors = false;
 
             if (options.Palette) {
@@ -16,7 +224,7 @@
                         break;
                     }
                 }
-            } 
+            }
 
             if (invalidColors && callbackFail)
                 callbackFail("Invalid color");
@@ -35,11 +243,9 @@
 
             if (callbackSuccess)
                 callbackSuccess(url);
-        }
+        };
 
-        letteringTextFontColor(text: string, font: string, colors: string[], imageId: string, callbackSuccess: () => void,
-            callbackFail: (errorMessage: string) => void): void {
-
+        ImageRenderer.prototype.letteringTextFontColor = function (text, font, colors, imageId, callbackSuccess, callbackFail) {
             var options = new Options.LetteringOptions();
             options.Text = text;
             options.Font = font;
@@ -58,16 +264,15 @@
                 callbackFail("Invalid color.");
             }
 
-
             if (colors && !invalidColors) {
-                    options.Neendle = 0;
-                    options.Palette = colors;
+                options.Neendle = 0;
+                options.Palette = colors;
             }
 
             this.lettering(options, imageId, callbackSuccess, null);
-        }
+        };
 
-        letteringBase64(options: Options.LetteringOptions, callbackSuccess: (data: string) => void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.letteringBase64 = function (options, callbackSuccess, callbackFail) {
             var invalidColors = false;
 
             if (options.Palette) {
@@ -86,9 +291,9 @@
                 var url = this.createLetteringUrl(options);
                 this.GetBase64Image(url, callbackSuccess, callbackFail);
             }
-        }
+        };
 
-        letteringTextFontColorBase64(text: string, font: string,colors: string[], callbackSuccess: (data: string)=> void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.letteringTextFontColorBase64 = function (text, font, colors, callbackSuccess, callbackFail) {
             var options = new Options.LetteringOptions();
             options.Text = text;
             options.Font = font;
@@ -107,7 +312,6 @@
                 callbackFail("Invalid color.");
             }
 
-
             if (colors && !invalidColors) {
                 options.Neendle = 0;
                 options.Palette = colors;
@@ -115,9 +319,9 @@
 
             var url = this.createLetteringUrl(options);
             this.GetBase64Image(url, callbackSuccess, callbackFail);
-        }
+        };
 
-        template(templateFile: string,imageId: string, callbackSuccess: (url) => void, personalizations?: Options.Peronalization[]) {
+        ImageRenderer.prototype.template = function (templateFile, imageId, callbackSuccess, personalizations) {
             var url = this.createTemplateUrl(templateFile, personalizations);
 
             if (imageId) {
@@ -129,18 +333,15 @@
 
             if (callbackSuccess)
                 callbackSuccess(url);
-        }
+        };
 
-        templateBase64(templateFile, callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void,
-            personalizations?: Options.Peronalization[]) {
-
+        ImageRenderer.prototype.templateBase64 = function (templateFile, callbackSuccess, callbackFail, personalizations) {
             var url = this.createTemplateUrl(templateFile, personalizations);
 
             this.GetBase64Image(url, callbackSuccess, callbackFail);
-        }
+        };
 
-        design(fileName: string, imageId, palette: string[], needles: number[], transformationOptions: Options.TransformationOptions,
-            callbackSuccess: (url) => void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.design = function (fileName, imageId, palette, needles, transformationOptions, callbackSuccess, callbackFail) {
             var invalidColors = false;
 
             if (palette) {
@@ -167,17 +368,17 @@
 
             if (callbackSuccess)
                 callbackSuccess(url);
-        }
+        };
 
-        designChangePalette(fileName: string, imageId: string, palette: string[], callbackSuccess: (url) => void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.designChangePalette = function (fileName, imageId, palette, callbackSuccess, callbackFail) {
             this.design(fileName, imageId, palette, null, null, callbackSuccess, callbackFail);
-        }
+        };
 
-        designChangeNeedles(fileName: string, imageId, needles: number[], callbackSuccess: (url) => void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.designChangeNeedles = function (fileName, imageId, needles, callbackSuccess, callbackFail) {
             this.design(fileName, imageId, null, needles, null, callbackSuccess, callbackFail);
-        }
+        };
 
-        designBase64(fileName: string, palette: string[], needles: number[], transformationOptions: Options.TransformationOptions, callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.designBase64 = function (fileName, palette, needles, transformationOptions, callbackSuccess, callbackFail) {
             var invalidColors = false;
 
             if (palette) {
@@ -196,9 +397,9 @@
                 var url = this.createDesignUrl(fileName, palette, needles, transformationOptions);
                 this.GetBase64Image(url, callbackSuccess, callbackFail);
             }
-        }
+        };
 
-        designChangePaletteBase64(fileName: string, palette: string[], callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.designChangePaletteBase64 = function (fileName, palette, callbackSuccess, callbackFail) {
             var invalidColors = false;
 
             if (palette) {
@@ -217,14 +418,14 @@
                 var url = this.createDesignUrl(fileName, palette, null, null);
                 this.GetBase64Image(url, callbackSuccess, callbackFail);
             }
-        }
+        };
 
-        designChangeNeedlesBase64(fileName: string, needles: number[], callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.designChangeNeedlesBase64 = function (fileName, needles, callbackSuccess, callbackFail) {
             var url = this.createDesignUrl(fileName, null, needles, null);
             this.GetBase64Image(url, callbackSuccess, callbackFail);
-        }
+        };
 
-        compound(compoundOptions: Options.CompoundOptions, imageId: string, callbackSuccess:(url: string) => void) {
+        ImageRenderer.prototype.compound = function (compoundOptions, imageId, callbackSuccess) {
             var url = this.createCompoundUrl(compoundOptions);
 
             if (imageId) {
@@ -233,15 +434,15 @@
                     element.setAttribute("src", url);
                 }
             }
-        }
+        };
 
-        compoundBase64(compoundOptions: Options.CompoundOptions, callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void) {
+        ImageRenderer.prototype.compoundBase64 = function (compoundOptions, callbackSuccess, callbackFail) {
             var url = this.createCompoundUrl(compoundOptions);
 
             this.GetBase64Image(url, callbackSuccess, callbackFail);
-        }
+        };
 
-        private GetBase64Image(url: string, callbackSuccess: (base64string: string) => void, callbackFail: (errorMessage: string)=> void) {
+        ImageRenderer.prototype.GetBase64Image = function (url, callbackSuccess, callbackFail) {
             var img = new Image();
             var dataURL = "";
             img.src = url;
@@ -250,26 +451,21 @@
                 canvas.width = img.width;
                 canvas.height = img.height;
 
-                // Copy the image contents to the canvas
                 var ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0);
 
-                // Get the data-URL formatted image
-                // Firefox supports PNG and JPEG. You could check img.src to
-                // guess the original format, but be aware the using "image/jpg"
-                // will re-encode the image.
                 dataURL = canvas.toDataURL("image/png");
                 if (callbackSuccess)
-                    callbackSuccess(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));  
-            }
+                    callbackSuccess(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
+            };
 
             img.onerror = function () {
-                if(callbackFail)
+                if (callbackFail)
                     callbackFail("Image could not be loaded.");
-            }
-        }
+            };
+        };
 
-        private createLetteringUrl(options: Options.LetteringOptions) {
+        ImageRenderer.prototype.createLetteringUrl = function (options) {
             var text = (options.Text) ? options.Text : "ABC";
             var url = this.confObject.url + "render/Lettering?Text=" + text;
 
@@ -319,9 +515,9 @@
                 }
             }
             return url;
-        }
+        };
 
-        private createTemplateUrl(file: string, personalizations: Options.Peronalization[]) {
+        ImageRenderer.prototype.createTemplateUrl = function (file, personalizations) {
             var url = this.confObject.url + "render/templates/" + file;
             if (personalizations) {
                 if (personalizations.length > 0) {
@@ -330,7 +526,7 @@
                     for (var i = 0; i < personalizations.length; i++) {
                         if (personalizations[i].Name) {
                             if (!firstPer)
-                                url += "&"
+                                url += "&";
 
                             url += "Personalizations[" + i + "].Name=" + personalizations[i].Name.replace(/\s/g, "%20");
 
@@ -339,7 +535,7 @@
                         }
                         if (personalizations[i].Design) {
                             if (!firstPer)
-                                url += "&"
+                                url += "&";
 
                             url += "Personalizations[" + i + "].Design=" + personalizations[i].Design.replace(/\s/g, "%20");
 
@@ -348,7 +544,7 @@
                         }
                         if (personalizations[i].Text) {
                             if (!firstPer)
-                                url += "&"
+                                url += "&";
 
                             url += "Personalizations[" + i + "].Text=" + personalizations[i].Text.replace(/\s/g, "%20");
 
@@ -357,7 +553,7 @@
                         }
                         if (personalizations[i].TextColour) {
                             if (!firstPer)
-                                url += "&"
+                                url += "&";
 
                             url += "Personalizations[" + i + "].TextColour=" + personalizations[i].TextColour.replace(/\s/g, "%20");
 
@@ -368,9 +564,9 @@
                 }
             }
             return url;
-        }
+        };
 
-        private createDesignUrl(designFile: string, palette: string[], needles: number[], transformationOptions: Options.TransformationOptions) {
+        ImageRenderer.prototype.createDesignUrl = function (designFile, palette, needles, transformationOptions) {
             var url = this.confObject.url + "render/Designs/" + designFile + "?";
             var isFirstParameter = true;
 
@@ -432,9 +628,9 @@
                 }
             }
             return url;
-        }
+        };
 
-        private createCompoundUrl(compoundOptions: Options.CompoundOptions) {
+        ImageRenderer.prototype.createCompoundUrl = function (compoundOptions) {
             var url = this.confObject.url + "render/Compound?";
             var isFirstParameter = true;
 
@@ -463,7 +659,7 @@
                         if (!isFirstParameter)
                             url += "&";
 
-                        url += "needles["+ j + "]=" + compoundOptions.Needles[j];
+                        url += "needles[" + j + "]=" + compoundOptions.Needles[j];
                         isFirstParameter = false;
                     }
                 }
@@ -537,9 +733,9 @@
             }
 
             return url;
-        }
+        };
 
-        private addCompoundOtionsToUrl(elements: Options.CompoundElements[], url, isFirstParameter: boolean) {
+        ImageRenderer.prototype.addCompoundOtionsToUrl = function (elements, url, isFirstParameter) {
             for (var i = 0; i < elements.length; i++) {
                 var isFirstElementParameter = true;
                 if (!isFirstParameter)
@@ -573,7 +769,7 @@
                                 isFirstElementParameter = false;
                             }
                         }
-                    } 
+                    }
                 }
                 if (elements[i].Letteting) {
                     if (!isFirstParameter)
@@ -590,9 +786,9 @@
                 url: url,
                 isFirstParameter: isFirstParameter
             };
-        }
+        };
 
-        private addLetteringToCompoundUrl(options: Options.LetteringOptions, url: string, isFirstElement: boolean) {
+        ImageRenderer.prototype.addLetteringToCompoundUrl = function (options, url, isFirstElement) {
             var text = (options.Text) ? options.Text : "ABC";
             url += text;
 
@@ -636,6 +832,41 @@
                 url += "%26Y1=" + options.Y1;
 
             return url;
+        };
+        return ImageRenderer;
+    })();
+    Renderer.ImageRenderer = ImageRenderer;
+})(Renderer || (Renderer = {}));
+var StitchEngine;
+(function (StitchEngine) {
+    var SEConfigObject = (function () {
+        function SEConfigObject(url) {
+            if (!(url.substr(url.length - 1) == "/"))
+                url += "/";
+            url += "1/";
+            this.url = url;
         }
-    }
-}
+        return SEConfigObject;
+    })();
+    StitchEngine.SEConfigObject = SEConfigObject;
+})(StitchEngine || (StitchEngine = {}));
+var StitchEngine;
+(function (StitchEngine) {
+    var SEFactory = (function () {
+        function SEFactory(confObject) {
+            this.confObject = confObject;
+        }
+        SEFactory.prototype.getImageRenderer = function () {
+            return new Renderer.ImageRenderer(this.confObject);
+        };
+
+        SEFactory.prototype.getAssetsManager = function () {
+            if (!this.assetsManager)
+                this.assetsManager = new Assets.AssetsManager(this.confObject);
+
+            return this.assetsManager;
+        };
+        return SEFactory;
+    })();
+    StitchEngine.SEFactory = SEFactory;
+})(StitchEngine || (StitchEngine = {}));

@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="Scripts/Stitchportjs.min.js"></script>
+    <title></title>
+</head>
+<body>
+    <div id="fontsList"></div>
+</body>
+</html>
+
+<script>
+    (function () {
+        //
+        //create the config object by passing as parameter your domain url
+        //
+        var configObject = new StitchEngine.SEConfigObject("http://localhost:49776/Api");
+
+        //
+        //create the stich engine factory and then the assets manager
+        //
+        var factory = new StitchEngine.SEFactory(configObject);
+        var assetsManager = factory.getAssetsManager();
+
+        //create font options
+
+        var fontOptions = new Options.getFontOptions();
+        fontOptions.IsSorted = true;
+        fontOptions.Type = "ftTrueType";
+
+        //and call the assets manager method to get fonts in JSON format
+        assetsManager.getFontsToJsonFormat(fontOptions, getFontsJsonSuccess, error);
+
+        //
+        //Get recipes in xml format
+        //
+
+        assetsManager.getRecipesToXml(getRecipesSuccess, error, true);
+
+        function getFontsJsonSuccess(fonts){
+            var fontsObj = JSON.parse(fonts);
+
+            if (fontsObj.Fonts.length > 0) {
+                document.getElementById("fontsList").innerHTML = "The name of first font is " + fontsObj.Fonts[0].Name;
+            }
+        }
+
+        function getRecipesSuccess(recipes) {
+            console.log(recipes);
+        }
+
+        function error(err) {
+            console.log(err);
+        }
+    })();
+</script>

@@ -19,6 +19,7 @@
             this.Neendle = null;
             this.MachineFormat = null;
             this.TransformationOptions = null;
+            this.Palette = null;
         }
 
         Text: string;
