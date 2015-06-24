@@ -187,7 +187,7 @@ You can change the palette. Example:
 			console.log(error);
 	});
 
-**-designChangeNeedles(fileName: string, imageId, needles: number[], callbackSuccess: (url) => void)**
+**-designChangeNeedles(fileName: string, imageId, needles: number[], callbackSuccess: (url) => void, callbackFail: (errorMessage: string) => void)**
 
 You can also change the needles. Example:
 
@@ -195,7 +195,9 @@ You can also change the needles. Example:
 
     imageRenderer.designChangeNeedles("B2VLB.PXF", "image", needles , function (url) {
          console.log(url);
-      });
+      }, function(error){
+			console.log(error);
+	});
 
 **-designChangePaletteBase64(fileName: string, palette: string[], callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void)**
 
