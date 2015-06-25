@@ -211,8 +211,9 @@ var Options;
 var Renderer;
 (function (Renderer) {
     var ImageRenderer = (function () {
-        function ImageRenderer(confObject) {
+        function ImageRenderer(confObject, urlConstructor) {
             this.confObject = confObject;
+            this.urlConstructor = urlConstructor;
         }
         ImageRenderer.prototype.lettering = function (options, imageId, callbackSuccess, callbackFail) {
             var invalidColors = false;
@@ -232,7 +233,7 @@ var Renderer;
             if (invalidColors)
                 options.Palette = null;
 
-            var url = this.createLetteringUrl(options);
+            var url = this.urlConstructor.createLetteringUrl(this.confObject.url, options);
 
             if (imageId) {
                 var element = document.getElementById(imageId);
@@ -288,7 +289,7 @@ var Renderer;
                 callbackFail("Invalid colors");
 
             if (!invalidColors) {
-                var url = this.createLetteringUrl(options);
+                var url = this.urlConstructor.createLetteringUrl(this.confObject.url, options);
                 this.GetBase64Image(url, callbackSuccess, callbackFail);
             }
         };
@@ -317,12 +318,12 @@ var Renderer;
                 options.Palette = colors;
             }
 
-            var url = this.createLetteringUrl(options);
+            var url = this.urlConstructor.createLetteringUrl(this.confObject.url, options);
             this.GetBase64Image(url, callbackSuccess, callbackFail);
         };
 
         ImageRenderer.prototype.template = function (templateFile, imageId, callbackSuccess, personalizations) {
-            var url = this.createTemplateUrl(templateFile, personalizations);
+            var url = this.urlConstructor.createTemplateUrl(this.confObject.url, templateFile, personalizations);
 
             if (imageId) {
                 var element = document.getElementById(imageId);
@@ -336,7 +337,7 @@ var Renderer;
         };
 
         ImageRenderer.prototype.templateBase64 = function (templateFile, callbackSuccess, callbackFail, personalizations) {
-            var url = this.createTemplateUrl(templateFile, personalizations);
+            var url = this.urlConstructor.createTemplateUrl(this.confObject.url, templateFile, personalizations);
 
             this.GetBase64Image(url, callbackSuccess, callbackFail);
         };
@@ -357,7 +358,7 @@ var Renderer;
                 callbackFail("Invalid color");
 
             var paletteColors = (invalidColors) ? null : palette;
-            var url = this.createDesignUrl(fileName, paletteColors, needles, transformationOptions);
+            var url = this.urlConstructor.createDesignUrl(this.confObject.url, fileName, paletteColors, needles, transformationOptions);
 
             if (imageId) {
                 var element = document.getElementById(imageId);
@@ -394,7 +395,7 @@ var Renderer;
                 callbackFail("Invalid color");
 
             if (!invalidColors) {
-                var url = this.createDesignUrl(fileName, palette, needles, transformationOptions);
+                var url = this.urlConstructor.createDesignUrl(this.confObject.url, fileName, palette, needles, transformationOptions);
                 this.GetBase64Image(url, callbackSuccess, callbackFail);
             }
         };
@@ -415,18 +416,18 @@ var Renderer;
                 callbackFail("Invalid color");
 
             if (!invalidColors) {
-                var url = this.createDesignUrl(fileName, palette, null, null);
+                var url = this.urlConstructor.createDesignUrl(this.confObject.url, fileName, palette, null, null);
                 this.GetBase64Image(url, callbackSuccess, callbackFail);
             }
         };
 
         ImageRenderer.prototype.designChangeNeedlesBase64 = function (fileName, needles, callbackSuccess, callbackFail) {
-            var url = this.createDesignUrl(fileName, null, needles, null);
+            var url = this.urlConstructor.createDesignUrl(this.confObject.url, fileName, null, needles, null);
             this.GetBase64Image(url, callbackSuccess, callbackFail);
         };
 
         ImageRenderer.prototype.compound = function (compoundOptions, imageId, callbackSuccess) {
-            var url = this.createCompoundUrl(compoundOptions);
+            var url = this.urlConstructor.createCompoundUrl(this.confObject.url, compoundOptions);
 
             if (imageId) {
                 var element = document.getElementById(imageId);
@@ -437,7 +438,7 @@ var Renderer;
         };
 
         ImageRenderer.prototype.compoundBase64 = function (compoundOptions, callbackSuccess, callbackFail) {
-            var url = this.createCompoundUrl(compoundOptions);
+            var url = this.urlConstructor.createCompoundUrl(this.confObject.url, compoundOptions);
 
             this.GetBase64Image(url, callbackSuccess, callbackFail);
         };
@@ -464,10 +465,51 @@ var Renderer;
                     callbackFail("Image could not be loaded.");
             };
         };
+        return ImageRenderer;
+    })();
+    Renderer.ImageRenderer = ImageRenderer;
+})(Renderer || (Renderer = {}));
+var StitchEngine;
+(function (StitchEngine) {
+    var SEConfigObject = (function () {
+        function SEConfigObject(url) {
+            if (!(url.substr(url.length - 1) == "/"))
+                url += "/";
+            url += "1/";
+            this.url = url;
+        }
+        return SEConfigObject;
+    })();
+    StitchEngine.SEConfigObject = SEConfigObject;
+})(StitchEngine || (StitchEngine = {}));
+var StitchEngine;
+(function (StitchEngine) {
+    var SEFactory = (function () {
+        function SEFactory(confObject) {
+            this.confObject = confObject;
+        }
+        SEFactory.prototype.getImageRenderer = function () {
+            return new Renderer.ImageRenderer(this.confObject, new Utils.UrlConstructor());
+        };
 
-        ImageRenderer.prototype.createLetteringUrl = function (options) {
+        SEFactory.prototype.getAssetsManager = function () {
+            if (!this.assetsManager)
+                this.assetsManager = new Assets.AssetsManager(this.confObject);
+
+            return this.assetsManager;
+        };
+        return SEFactory;
+    })();
+    StitchEngine.SEFactory = SEFactory;
+})(StitchEngine || (StitchEngine = {}));
+var Utils;
+(function (Utils) {
+    var UrlConstructor = (function () {
+        function UrlConstructor() {
+        }
+        UrlConstructor.prototype.createLetteringUrl = function (url, options) {
             var text = (options.Text) ? options.Text : "ABC";
-            var url = this.confObject.url + "render/Lettering?Text=" + text;
+            url += "render/Lettering?Text=" + text;
 
             if (options.Type)
                 url += "&Type=" + options.Type;
@@ -517,8 +559,8 @@ var Renderer;
             return url;
         };
 
-        ImageRenderer.prototype.createTemplateUrl = function (file, personalizations) {
-            var url = this.confObject.url + "render/templates/" + file;
+        UrlConstructor.prototype.createTemplateUrl = function (url, file, personalizations) {
+            url += "render/templates/" + file;
             if (personalizations) {
                 if (personalizations.length > 0) {
                     url += "?";
@@ -566,8 +608,8 @@ var Renderer;
             return url;
         };
 
-        ImageRenderer.prototype.createDesignUrl = function (designFile, palette, needles, transformationOptions) {
-            var url = this.confObject.url + "render/Designs/" + designFile + "?";
+        UrlConstructor.prototype.createDesignUrl = function (url, designFile, palette, needles, transformationOptions) {
+            url += "render/Designs/" + designFile + "?";
             var isFirstParameter = true;
 
             if (palette) {
@@ -630,8 +672,8 @@ var Renderer;
             return url;
         };
 
-        ImageRenderer.prototype.createCompoundUrl = function (compoundOptions) {
-            var url = this.confObject.url + "render/Compound?";
+        UrlConstructor.prototype.createCompoundUrl = function (url, compoundOptions) {
+            url += "render/Compound?";
             var isFirstParameter = true;
 
             if (compoundOptions) {
@@ -735,7 +777,7 @@ var Renderer;
             return url;
         };
 
-        ImageRenderer.prototype.addCompoundOtionsToUrl = function (elements, url, isFirstParameter) {
+        UrlConstructor.prototype.addCompoundOtionsToUrl = function (elements, url, isFirstParameter) {
             for (var i = 0; i < elements.length; i++) {
                 var isFirstElementParameter = true;
                 if (!isFirstParameter)
@@ -788,7 +830,7 @@ var Renderer;
             };
         };
 
-        ImageRenderer.prototype.addLetteringToCompoundUrl = function (options, url, isFirstElement) {
+        UrlConstructor.prototype.addLetteringToCompoundUrl = function (options, url, isFirstElement) {
             var text = (options.Text) ? options.Text : "ABC";
             url += text;
 
@@ -833,40 +875,7 @@ var Renderer;
 
             return url;
         };
-        return ImageRenderer;
+        return UrlConstructor;
     })();
-    Renderer.ImageRenderer = ImageRenderer;
-})(Renderer || (Renderer = {}));
-var StitchEngine;
-(function (StitchEngine) {
-    var SEConfigObject = (function () {
-        function SEConfigObject(url) {
-            if (!(url.substr(url.length - 1) == "/"))
-                url += "/";
-            url += "1/";
-            this.url = url;
-        }
-        return SEConfigObject;
-    })();
-    StitchEngine.SEConfigObject = SEConfigObject;
-})(StitchEngine || (StitchEngine = {}));
-var StitchEngine;
-(function (StitchEngine) {
-    var SEFactory = (function () {
-        function SEFactory(confObject) {
-            this.confObject = confObject;
-        }
-        SEFactory.prototype.getImageRenderer = function () {
-            return new Renderer.ImageRenderer(this.confObject);
-        };
-
-        SEFactory.prototype.getAssetsManager = function () {
-            if (!this.assetsManager)
-                this.assetsManager = new Assets.AssetsManager(this.confObject);
-
-            return this.assetsManager;
-        };
-        return SEFactory;
-    })();
-    StitchEngine.SEFactory = SEFactory;
-})(StitchEngine || (StitchEngine = {}));
+    Utils.UrlConstructor = UrlConstructor;
+})(Utils || (Utils = {}));

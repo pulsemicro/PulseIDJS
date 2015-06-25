@@ -18,4 +18,11 @@
         getFontsToXmlFormat: (options: Options.getFontOptions, callbackSuccess: (fonts) => void, callbackFail: (errorMessage: string) => void) => void;
         getRecipesToJson: (callbackSuccess: (data) => void, callbackFail: (errorMessage: string) => void, issorted?: boolean) => void;
     }
+
+    export interface IURL {
+        createLetteringUrl: (url: string, options: Options.LetteringOptions) => string;
+        createTemplateUrl: (url: string, file: string, personalizations: Options.Peronalization[]) => string;
+        createDesignUrl: (url: string, designFile: string, palette: string[], needles: number[], transformationOptions: Options.TransformationOptions) => string;
+        createCompoundUrl: (url: string,compoundOptions: Options.CompoundOptions) => string;
+    }
 }

@@ -8,7 +8,7 @@
         }
 
         getImageRenderer() {
-            return new Renderer.ImageRenderer(this.confObject);
+            return new Renderer.ImageRenderer(this.confObject, new Utils.UrlConstructor());
         }
 
         getAssetsManager() {
