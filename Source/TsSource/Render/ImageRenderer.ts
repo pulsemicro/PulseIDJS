@@ -1,9 +1,9 @@
 ﻿module Renderer {
     export class ImageRenderer implements Helpers.IRenderer {
         private confObject: StitchEngine.SEConfigObject;
-        private urlConstructor: Utils.UrlConstructor;
+        private urlConstructor: Helpers.IURL;
 
-        constructor(confObject: StitchEngine.SEConfigObject, urlConstructor: Utils.UrlConstructor) {
+        constructor(confObject: StitchEngine.SEConfigObject, urlConstructor: Helpers.IURL) {
             this.confObject = confObject;
             this.urlConstructor = urlConstructor;
         }
