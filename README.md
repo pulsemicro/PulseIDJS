@@ -1,11 +1,11 @@
 
 
-**StitchportJS**
+**PulseIDJS**
 ---
 
-StitchportJS is a javascript library that helps using the Stitchport Web API. 
+PulseIDJS is a javascript library that helps using the Stitchport Web API. 
 
-StitchportJS allows rendering:
+PulseIDJS allows rendering:
 
   - Lettering
   - Designs
@@ -15,7 +15,7 @@ StitchportJS allows rendering:
 
 Tech Info
 ----
-StitchportJS is based on javascript only and no third party libraries are required
+PulseIDJS is based on javascript only and no third party libraries are required
 
 
 Installation
@@ -25,7 +25,7 @@ Inside the "dist" folder you will find stitchport.min.js file. Please add it to 
 	<script src="StitchportJS.min.js"></script>
 
 
-How to use the StitchportJS
+How to use the PulseIDJS
 --
 
 After including the js file to your project you have to create a new stitch engine configuration object and pass as a parameter the domain of the stitchport web api. For example:
