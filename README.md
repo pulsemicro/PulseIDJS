@@ -20,9 +20,9 @@ PulseIDJS is based on javascript only and no third party libraries are required
 
 Installation
 --
-Inside the "dist" folder you will find stitchport.min.js file. Please add it to your html page. 
+Inside the "dist" folder you will find PulseIdjs.min.js file. Please add it to your html page. 
 
-	<script src="StitchportJS.min.js"></script>
+	<script src="PulseIdjs.min.js"></script>
 
 
 How to use the PulseIDJS
