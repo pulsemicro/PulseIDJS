@@ -3,7 +3,7 @@
 **PulseIDJS**
 ---
 
-PulseIDJS is a javascript library that helps using the Stitchport Web API. 
+PulseIDJS is a javascript library that helps using the PulseID Toolkit Web API. 
 
 PulseIDJS allows rendering:
 
@@ -28,9 +28,9 @@ Inside the "dist" folder you will find stitchport.min.js file. Please add it to 
 How to use the PulseIDJS
 --
 
-After including the js file to your project you have to create a new stitch engine configuration object and pass as a parameter the domain of the stitchport web api. For example:
+After including the js file to your project you have to create a new stitch engine configuration object and pass as a parameter the domain of the PulseID Toolkit Web API. For example:
 
-	var configObject = new StitchEngine.SEConfigObject("http://www.stitchportwebapi.com");
+	var configObject = new StitchEngine.SEConfigObject("http://www.pulseidwebapi.com");
 
 Then create a factory object by passing the configuration object that was created in the previous step. Use this factory class to create an imageRenderer object:
 
@@ -329,12 +329,12 @@ A letteringOptions object can take the following parameters:
 *All parameters can be null*
 
  - **Text**: string (default value is "ABC")
- - **Type**: string (default value is "ltNormal", please refer to stitchport WebAPI documentation to see the valid values)
+ - **Type**: string (default value is "ltNormal", please refer to PulseID Toolkit Web API documentation to see the valid values)
  - **Font**: string (defaule value is "Block New", to see how to get the list of fonts go to section "**GET FONTS**")
  - **Height**: number (default value is 254)
  - **WidthCompression**: number (default value is 100 for 100%)
- - **Justification**: string (default value is "jtCenter", please refer to stitchport WebAPI documentation to see the valid values)
- - **Envelope**: string (default value is "etRectangle", please refer to stitchport WebAPI documentation to see the valid values)
+ - **Justification**: string (default value is "jtCenter", please refer to PulseID Toolkit Web API documentation to see the valid values)
+ - **Envelope**: string (default value is "etRectangle", please refer to PulseID Toolkit Web API documentation to see the valid values)
  - **Decoration**: string (Valid only when Type="Monogram")
  - **Needle**: number
  - **Recipe**: string (default is "Normal", to see how to get the list of fonts go to section "**GET RECIPES**")
@@ -415,7 +415,7 @@ Example of creating a personalization object:
 
 Font options can take the following paraeters:
 
-- **Type:** string (default is "all", please refer to stitchport WebAPI documentation to see the valid values)
+- **Type:** string (default is "all", please refer to PulseID Toolkit Web API documentation to see the valid values)
 - **IsSorted:** boolean (default is false)
 
 Example:
