@@ -108,6 +108,20 @@
 })(Assets || (Assets = {}));
 var Options;
 (function (Options) {
+    var RenderingOptions = (function () {
+        function RenderingOptions() {
+            this.Format = null;
+            this.Background = null;
+            this.ImageHeight = null;
+            this.ImageWidth = null;
+            this.DPI = null;
+            this.IsSquare = null;
+            this.Padding = null;
+        }
+        return RenderingOptions;
+    })();
+    Options.RenderingOptions = RenderingOptions;
+
     var LetteringOptions = (function () {
         function LetteringOptions() {
             this.Text = null;
@@ -127,6 +141,7 @@ var Options;
             this.MachineFormat = null;
             this.TransformationOptions = null;
             this.Palette = null;
+            this.RenderingOptions = null;
         }
         return LetteringOptions;
     })();
@@ -556,6 +571,28 @@ var Utils;
                     url += "&palette[" + j + "]=" + options.Palette[j];
                 }
             }
+            if (options.RenderingOptions) {
+                if (options.RenderingOptions.Background)
+                    url += "&background=" + options.RenderingOptions.Background;
+
+                if (options.RenderingOptions.DPI)
+                    url += "&dpi=" + options.RenderingOptions.DPI;
+
+                if (options.RenderingOptions.Format)
+                    url += "&Format=" + options.RenderingOptions.Format;
+
+                if (options.RenderingOptions.ImageHeight)
+                    url += "&ImageHeight=" + options.RenderingOptions.ImageHeight;
+
+                if (options.RenderingOptions.ImageWidth)
+                    url += "&ImageWidth=" + options.RenderingOptions.ImageWidth;
+
+                if (options.RenderingOptions.IsSquare)
+                    url += "&IsSquare=" + options.RenderingOptions.IsSquare;
+
+                if (options.RenderingOptions.Padding)
+                    url += "&Padding=" + options.RenderingOptions.Padding;
+            }
             return url;
         };
 
@@ -848,6 +885,8 @@ var Utils;
                 url += "%26MachineFormat=" + options.MachineFormat;
             if (options.Neendle)
                 url += "%26needle=" + options.Neendle;
+            if (options.Palette)
+                url += "%26palette=" + options.Palette;
             if (options.Recipe)
                 url += "%26Recipe=" + options.Recipe;
             if (options.TransformationOptions) {

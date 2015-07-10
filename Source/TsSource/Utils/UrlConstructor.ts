@@ -342,6 +342,8 @@
                 url += "%26MachineFormat=" + options.MachineFormat;
             if (options.Neendle)
                 url += "%26needle=" + options.Neendle;
+            if (options.Palette)
+                url += "%26palette=" + options.Palette;
             if (options.Recipe)
                 url += "%26Recipe=" + options.Recipe;
             if (options.TransformationOptions) {
